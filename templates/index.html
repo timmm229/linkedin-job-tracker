@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Job Tracker - Oracle Jobs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .refresh-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 5px solid #ddd;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .job-card.priority-1 {
+            border-left-color: #28a745;
+            background: linear-gradient(to right, #e8f5e9 0%, white 10%);
+        }
+        
+        .job-card.priority-2 {
+            border-left-color: #ffc107;
+            background: linear-gradient(to right, #fff3cd 0%, white 10%);
+        }
+        
+        .job-card.priority-3 {
+            border-left-color: #6c757d;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .priority-badge.p1 {
+            background: #28a745;
+            color: white;
+        }
+        
+        .priority-badge.p2 {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .priority-badge.p3 {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .job-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .job-company {
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .job-location {
+            color: #6c757d;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .job-description {
+            color: #495057;
+            line-height: 1.6;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .apply-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .apply-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+        
+        .posted-date {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+        
+        .no-jobs {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Oracle Job Tracker</h1>
+            <p style="color: #6c757d; margin-top: 10px;">
+                Tracking Oracle ERP, EPM, Technical Sales, and PwC Manager positions
+            </p>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Total Jobs</div>
+                    <div class="stat-value">{{ total_jobs }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Priority 1 (Top Matches)</div>
+                    <div class="stat-value" style="color: #28a745;">
+                        {{ jobs|selectattr('priority', 'equalto', 1)|list|length }}
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Last Updated</div>
+                    <div class="stat-value" style="font-size: 1.1em;">
+                        {{ last_updated or 'Never' }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <a href="/" class="filter-btn {% if not filter_level %}active{% endif %}">All Jobs</a>
+                <a href="/priority/1" class="filter-btn {% if filter_level == 1 %}active{% endif %}">Priority 1</a>
+                <a href="/priority/2" class="filter-btn {% if filter_level == 2 %}active{% endif %}">Priority 2</a>
+                <a href="/priority/3" class="filter-btn {% if filter_level == 3 %}active{% endif %}">Priority 3</a>
+                <button class="refresh-btn" onclick="refreshJobs()">🔄 Refresh Now</button>
+            </div>
+        </div>
+        
+        {% if jobs %}
+        <div class="jobs-grid">
+            {% for job in jobs %}
+            <div class="job-card priority-{{ job.priority }}">
+                <span class="priority-badge p{{ job.priority }}">
+                    {% if job.priority == 1 %}⭐ TOP MATCH
+                    {% elif job.priority == 2 %}✓ GOOD FIT
+                    {% else %}○ GENERAL{% endif %}
+                </span>
+                
+                <div class="job-title">{{ job.title }}</div>
+                <div class="job-company">{{ job.company }}</div>
+                <div class="job-location">📍 {{ job.location }}</div>
+                
+                {% if job.description %}
+                <div class="job-description">{{ job.description }}...</div>
+                {% endif %}
+                
+                <div class="job-footer">
+                    <span class="posted-date">Posted: {{ job.posted_date or 'Recently' }}</span>
+                    <a href="{{ job.url }}" target="_blank" class="apply-btn">View on LinkedIn →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-jobs">
+            <h2>No jobs found</h2>
+            <p>Click "Refresh Now" to fetch the latest jobs from LinkedIn</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function refreshJobs() {
+            document.querySelector('.refresh-btn').textContent = '⏳ Refreshing...';
+            fetch('/api/refresh')
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert('Error refreshing jobs. Please try again.');
+                    document.querySelector('.refresh-btn').textContent = '🔄 Refresh Now';
+                });
+        }
+    </script>
+</body>
+</html>
