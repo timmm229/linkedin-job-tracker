@@ -11,3 +11,5 @@ This program runs on python. It scrapes your email account for linkedin job post
 and places essential information including a link to job posts on a spreadsheet. 
 
 You may update keywords.json to place the keywords that you want the parser to search for.
+
+The program to execute is linkedin_email_parser.py.
